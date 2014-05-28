@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Oleview Main</title>
+<script src="/scripts/jquery-1.11.1.min.js"></script>
+<script>
+	var submit_url = function() {
+		var v_url = document.forms["url_form"]["url"];
+		$.ajax({
+			url : "www.naver.com",
+			dataType : "html"
+		}).done(function(data) {
+			alert('suc');
+			alert(data);
+		}).fail(function(data){
+			alert('fail');
+			alert(data);
+		});
+		return true;
+	};
+</script>
+</head>
+<body>
+	<p>URL 입력</p>
+	<form name="url_form" onsubmit="submit_url();">
+		<input name="url" type="text" /> <input type="submit" value="GO!" />
+	</form>
+</body>
+</html>
