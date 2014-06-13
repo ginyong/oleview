@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 <script src="scripts/jquery-1.11.0.min.js"></script>
 
-</head>
+</head> 
 	 
 <body>  
 
