@@ -1,7 +1,8 @@
+package GetPage;
+
 import java.io.IOException;
 import java.util.Iterator;
 
-import javax.net.ssl.ExtendedSSLSession;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,18 +15,19 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * Servlet implementation class UrlConnector
+ * Servlet implementation class GetPage
  */
-@WebServlet("/get_page.do")
-public class UrlConnector extends HttpServlet {
+@WebServlet("/get_page_part.do")
+public class GetPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public UrlConnector() {
+	public GetPage() {
 		super();
 		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
@@ -58,6 +60,8 @@ public class UrlConnector extends HttpServlet {
 
 		try {
 			Document doc = Jsoup.connect(url).get();
+
+			Element body = doc.body();
 			Elements els = doc.getAllElements();
 			for (Iterator<Element> Iter = els.iterator(); Iter.hasNext();) {
 				Element e = Iter.next();
@@ -75,14 +79,16 @@ public class UrlConnector extends HttpServlet {
 						e.attr("src", src_url);
 					}
 				} else if (tagName.equals("script")) {
-					/*
-					 * String src_url = e.attr("src"); if (!src_url.equals(""))
-					 * { if (src_url.toLowerCase().indexOf("http") == -1) {
-					 * src_url = root_url + src_url; e.attr("src", src_url); } }
-					 */
-					e.remove();
+					String src_url = e.attr("src");
+					if (!src_url.equals("")) {
+						if (src_url.toLowerCase().indexOf("http") == -1) {
+							src_url = root_url + src_url;
+							e.attr("src", src_url);
+						}
+					}
+					// e.remove();
 				} else if (tagName.equals("iframe")) {
-					e.remove();
+					// e.remove();
 				}
 			}
 			res = doc.html();

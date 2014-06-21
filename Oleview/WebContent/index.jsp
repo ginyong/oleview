@@ -7,8 +7,7 @@
 <title>Oleview</title>
 <style>
 #page {
-	border: solid;
-	border-color: red;
+	box-shadow: 0 0 0 5px blue inset;
 }
 </style>
 <script src="scripts/jquery-1.11.0.min.js"></script>
