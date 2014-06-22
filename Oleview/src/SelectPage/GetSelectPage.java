@@ -18,13 +18,13 @@ import org.jsoup.select.Elements;
  * Servlet implementation class UrlConnector
  */
 @WebServlet("/get_page.do")
-public class GetSeletcPage extends HttpServlet {
+public class GetSelectPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public GetSeletcPage() {
+	public GetSelectPage() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

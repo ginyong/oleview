@@ -49,6 +49,8 @@
 				var pCName = this.className;
 				pCName = pCName.replace(' oleview_tag', '');
 				pCName = pCName.replace('oleview_tag', '');
+				pCName = replaceAll(pCName, ' ', '.');
+
 				if (pCName != '') {
 					ret = ret + "." + pCName;
 				}
@@ -62,6 +64,7 @@
 			var myCName = this.className;
 			myCName = myCName.replace(' oleview_tag', '');
 			myCName = myCName.replace('oleview_tag', '');
+			myCName = replaceAll(myCName, ' ', '.');
 
 			if (myCName != '') {
 				tmp = tmp + "." + myCName;
@@ -71,9 +74,19 @@
 			select_dom($(this), parentEls);
 		});
 	}
+	function replaceAll(str, orgStr, repStr) {
+		return str.split(orgStr).join(repStr);
+	}
 	function select_dom(element, dom_data) {
-		alert("width = " + element.width() + ", height = " + element.height()
-				+ ", dom = " + dom_data);
+		var width = element.width();
+		var height = element.height();
+		var url = $("#input_url").val();
+
+		var replace_url = "/Oleview/main.jsp?" + "width=" + width + "&height="
+				+ height + "&url=" + encodeURIComponent(url) + "&dom_data="
+				+ encodeURIComponent(dom_data);
+		//main.jsp 페이지로 이동 + 파라미터 전달
+		window.location = replace_url;
 	}
 </script>
 </head>
