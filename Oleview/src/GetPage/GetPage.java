@@ -54,7 +54,7 @@ public class GetPage extends HttpServlet {
 		String dom_string = "";
 
 		// 마지막에 BODY 와 HTML 은 제외
-		for (int i = 0; i < dom_arry.length - 2; i++) {
+		for (int i = 3; i < dom_arry.length; i++) {
 			dom_string += dom_arry[i] + " ";
 		}
 
@@ -76,33 +76,74 @@ public class GetPage extends HttpServlet {
 
 		try {
 			Document doc = Jsoup.connect(url).get();
+			Element head = doc.head();
 			Element body = doc.body();
+			Elements head_els = head.getAllElements();
 			Elements body_els = body.getAllElements();
-			System.out.println(dom_string);
-			Elements selected_body = doc
-					.select("DIV#newsGrp.sect_left DIV.vertical_part");
 
-			// for (Iterator<Element> Iter = body_els.iterator();
-			// Iter.hasNext();) {
-			// Element e = Iter.next();
-			// }
-			/*
-			 * Elements els = doc.getAllElements(); for (Iterator<Element> Iter
-			 * = els.iterator(); Iter.hasNext();) { Element e = Iter.next();
-			 * String tagName = e.tagName().toLowerCase(); if
-			 * (tagName.equals("link")) { String href_url = e.attr("href"); if
-			 * (href_url.toLowerCase().indexOf("http") == -1) { href_url =
-			 * root_url + href_url; e.attr("href", href_url); } } else if
-			 * (tagName.equals("img")) { String src_url = e.attr("src"); if
-			 * (src_url.toLowerCase().indexOf("http") == -1) { src_url =
-			 * root_url + src_url; e.attr("src", src_url); } } else if
-			 * (tagName.equals("script")) { String src_url = e.attr("src"); if
-			 * (!src_url.equals("")) { if (src_url.toLowerCase().indexOf("http")
-			 * == -1) { src_url = root_url + src_url; e.attr("src", src_url); }
-			 * } // e.remove(); } else if (tagName.equals("iframe")) { //
-			 * e.remove(); } } res = doc.html();
-			 */
-			res = selected_body.html();
+			for (Iterator<Element> Iter = head_els.iterator(); Iter.hasNext();) {
+				Element e = Iter.next();
+				String tagName = e.tagName().toLowerCase();
+				if (tagName.equals("link")) {
+					String href_url = e.attr("href");
+					if (href_url.toLowerCase().indexOf("http") == -1) {
+						href_url = root_url + href_url;
+						e.attr("href", href_url);
+					}
+				} else if (tagName.equals("img")) {
+					String src_url = e.attr("src");
+					if (src_url.toLowerCase().indexOf("http") == -1) {
+						src_url = root_url + src_url;
+						e.attr("src", src_url);
+					}
+				} else if (tagName.equals("script")) {
+					String src_url = e.attr("src");
+					if (!src_url.equals("")) {
+						if (src_url.toLowerCase().indexOf("http") == -1) {
+							src_url = root_url + src_url;
+							e.attr("src", src_url);
+						}
+					}
+					// e.remove();
+				} else if (tagName.equals("iframe")) {
+					// e.remove();
+				}
+			}
+
+			Elements selected_body = doc.select(dom_string).clone();
+
+			Elements script_els = new Elements();
+			// 스크립트나 링크들은 script_els에 저장
+			for (Iterator<Element> Iter = body_els.iterator(); Iter.hasNext();) {
+				Element e = Iter.next();
+				String tagName = e.tagName().toLowerCase();
+				if (tagName.equals("script")) {
+					String src_url = e.attr("src");
+					if (!src_url.equals("")) {
+						if (src_url.toLowerCase().indexOf("http") == -1) {
+							src_url = root_url + src_url;
+							e.attr("src", src_url);
+						}
+					}
+					script_els.add(e);
+				} else if (tagName.equals("link")) {
+					String href_url = e.attr("href");
+					if (href_url.toLowerCase().indexOf("http") == -1) {
+						href_url = root_url + href_url;
+						e.attr("href", href_url);
+					}
+					script_els.add(e);
+				}
+
+				if (tagName != "body")
+					e.remove();
+			}
+
+			// 선택한 부분 추가 + 스크립트 등 추가
+			body.append(selected_body.toString());
+			body.append(script_els.toString());
+
+			res = doc.html();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

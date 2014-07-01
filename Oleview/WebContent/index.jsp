@@ -39,44 +39,65 @@
 			$(this).css('box-shadow', '0 0 0 5px blue inset');
 			$(this).css('background-color', 'rgba(0, 0, 0, 0.3)');
 		});
-		$('.oleview_tag').click(function(event) {
-			event.stopPropagation();
-			var parentEls = $(this).parents().map(function() {
-				var ret = this.tagName;
-				if (this.id != "") {
-					ret = ret + "#" + this.id;
+		$('.oleview_tag').click(
+				function(event) {
+					event.stopPropagation();
+
+					var parentEls = "";
+					parentEls = $(this).parents().map(
+							function() {
+								var ret = serialize_dom_data(this.tagName,
+										this.id, this.className);
+								return ret;
+							}).get().join(",");
+
+					var parentEls_arry = parentEls.split(",");
+					parentEls_arry.reverse();
+					var parentEls_str = parentEls_arry.toString();
+					parentEls_str += ",";
+					parentEls_str += serialize_dom_data(this.tagName, this.id,
+							this.className);
+
+					select_dom($(this), parentEls_str);
+				});
+	}
+	function serialize_dom_data(tag_name, tag_id, tag_class) {
+		var ret_str = tag_name;
+
+		//ID가 존재하면 추가
+		if (tag_id != '') {
+			ret_str += "#";
+			ret_str += tag_id;
+		}
+
+		//Class에 Oleview 테그 제거
+		tag_class = tag_class.replace(' oleview_tag', '');
+		tag_class = tag_class.replace('oleview_tag', '');
+
+		//Class가 존재할경우 추가
+		if (tag_class != '') {
+			var tag_class_arry = tag_class.split(" ");
+			for ( var i in tag_class_arry) {
+				if (isValidClass(tag_class_arry[i])) {
+					ret_str += ".";
+					ret_str += tag_class_arry[i];
 				}
-				var pCName = this.className;
-				pCName = pCName.replace(' oleview_tag', '');
-				pCName = pCName.replace('oleview_tag', '');
-				pCName = replaceAll(pCName, ' ', '.');
-
-				if (pCName != '') {
-					ret = ret + "." + pCName;
-				}
-				return ret;
-			}).get().join(",");
-
-			var tmp = this.tagName;
-			if (this.id != "")
-				tmp = tmp + "#" + this.id;
-
-			var myCName = this.className;
-			myCName = myCName.replace(' oleview_tag', '');
-			myCName = myCName.replace('oleview_tag', '');
-			myCName = replaceAll(myCName, ' ', '.');
-
-			if (myCName != '') {
-				tmp = tmp + "." + myCName;
 			}
-			parentEls = tmp + "," + parentEls;
+		}
 
-			select_dom($(this), parentEls);
-		});
+		return ret_str;
+	}
+	function isValidClass(str) {
+		if (str == '')
+			return false;
+		if (str.indexOf("#") > -1)
+			return false;
+		return true;
 	}
 	function replaceAll(str, orgStr, repStr) {
 		return str.split(orgStr).join(repStr);
 	}
+
 	function select_dom(element, dom_data) {
 		var width = element.width();
 		var height = element.height();
