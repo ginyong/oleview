@@ -49,7 +49,6 @@ public class GetPage extends HttpServlet {
 		int counter = 0;
 
 		// Dom data parse
-		System.out.println(dom_data);
 		String[] dom_arry = dom_data.split(",");
 		String dom_string = "";
 
