@@ -17,6 +17,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title>Insert title here</title>
+<style>
+	.content{
+		overflow: hidden;
+	}
+</style>
 <script src="scripts/jquery-1.11.0.min.js"></script>
 <script>
 	$(document).ready(
@@ -32,8 +37,10 @@
 				content1.attr('src', '/Oleview/get_page_part.do?url='
 						+ encodeURIComponent(url) + '&dom_data='
 						+ encodeURIComponent(dom_data));
+				content1.attr('scrolling','no');
+				content1.addClass('content');
 				content1.appendTo($('body'));
-
+				
 				// on iframe loaded
 				content1.on('load', function(e) {
 					var cont = content1.contents();
