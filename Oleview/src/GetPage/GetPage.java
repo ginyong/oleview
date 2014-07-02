@@ -108,7 +108,7 @@ public class GetPage extends HttpServlet {
 					// e.remove();
 				}
 			}
-
+			System.out.println(dom_string);
 			Elements selected_body = doc.select(dom_string).clone();
 
 			Elements script_els = new Elements();
